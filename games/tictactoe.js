@@ -112,13 +112,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getRandomMove() {
-    const emptyCells = board
-      .map((v, i) => (v === null ? i : null))
-      .filter(i => i !== null);
+  const emptyCells = board
+    .map((v, i) => (v === null ? i : null))
+    .filter(i => i !== null);
 
-    if (emptyCells.length === 0) return null;
+  if (emptyCells.length === 0) return null;
 
-    return emptyCells[Math.floor[Math.random() * emptyCells.length]];
+  return emptyCells[Math.floor(Math.random() * emptyCells.length)];
   }
 
   function findBestMove() {
