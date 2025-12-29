@@ -148,19 +148,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getAIMove() {
     if (botLevel === "easy") {
-      const empty = board
-        .map((v, i) => (v === null ? i : null))
-        .filter(v => v !== null)
-      return empty[Math.floor(Math.random() * empty.length)];
+      for (const pattern of winPatterns) {
+        const values = pattern.combo.map(i => board[i]);
+        if (
+          values.filter(v => v === AI).length === 2 &&
+          values.includes(null)
+        ) {
+          return pattern.combo[values.indexOf[null]];
+        }
+      }
+
+      for (const pattern of winPatterns) {
+        const values = pattern.combo.map(i => board[i]);
+        if (
+          values.filter(v => v === HUMAN).length === 2 &&
+          values.includes(null)
+        ) {
+          return pattern.combo[values.indexOf[null]];
+        }
+      }
+
+      return getRandomMove();
     }
 
     if (botLevel === "medium") {
-      return findBestMove();
+      return mediumMove();
     }
 
-    if (botLevel === "hard") {
-      return minimaxMove();
-    }
+    return minimaxMove();
   }
 
   function minimaxMove() {
