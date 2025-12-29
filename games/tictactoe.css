@@ -65,6 +65,33 @@ h1 {
     text-shadow: 0 0 10px #22d3ee;
 }
 
+.difficulty {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.difficulty button {
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 1px solid #22d3ee;
+    background: transparent;
+    color: #22d3ee;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2 ease;
+}
+
+.difficulty button:hover {
+    background: rgba(34, 211, 238, 0.2);
+}
+
+.difficulty button.active {
+    background: #22d3ee;
+    color: black;
+    box-shadow: 0 0 15px #22d3ee;
+}
+
 /* =========================
    BOARD (LOCKED SIZE)
 ========================= */
