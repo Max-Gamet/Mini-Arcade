@@ -269,7 +269,7 @@ body {
 }
 
 .locked {
-    cursor: pointer;
+    cursor: not-allowed;
     filter: grayscale(1);
 }
 
