@@ -242,3 +242,13 @@ button:hover {
         padding: 12px 20px;
     }
 }
+
+@media (hover: none) and (pointer: coarse) {
+    .neon-cursor {
+        display: none;
+    }
+
+    body {
+        cursor: default;
+    }
+}
