@@ -115,32 +115,32 @@ document.addEventListener("DOMContentLoaded", () => {
   function findBestMove() {
     // Try to win
     for (let i = 0; i < 9; i++) {
-      if (!board[i]) {
-        board[i] = AI;
-        if (checkWin(AI)) {
-          board[i] = null;
-          return i;
-        }
+    if (!board[i]) {
+      board[i] = AI;
+      if (checkWin(AI)) {
         board[i] = null;
+        return i;
       }
+      board[i] = null;
+    }
+  }
+
+  function getAIMove() {
+    if (botLevel === "easy") {
+      const empty = board
+        .map((v, i) => (v === null ? i : null))
+        .filter(v => v !== null);
+      return empty[Math.floor(Math.random() * empty.length)];
     }
 
-    function getAIMove() {
-      if (botLevel === "easy") {
-        const empty = board
-          .map((v, i) => (v === null ? i : null))
-          .filter(v => v !== null);
-        return empty[Math.floor(Math.random() * empty.length)];
-      }
-
-      if (botLevel === "medium") {
-        return findBestMove();
-      }
-
-      if (botLevel === "hard") {
-        return minimaxMove();
-      } 
+    if (botLevel === "medium") {
+      return findBestMove();
     }
+
+    if (botLevel === "hard") {
+      return minimaxMove();
+    } 
+  }
 
   function minimaxMove() {
     let bestScore = -Infinity;
