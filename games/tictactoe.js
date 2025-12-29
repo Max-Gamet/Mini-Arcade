@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
           values.filter(v => v === AI).length === 2 &&
           values.includes(null)
         ) {
-          return pattern.combo[values.indexOf[null]];
+          return pattern.combo[values.indexOf(null)];
         }
       }
 
@@ -189,6 +189,26 @@ document.addEventListener("DOMContentLoaded", () => {
     return minimaxMove();
   }
 
+  function mediumMove() {
+    for (const pattern of winPatterns) {
+      const values = pattern.combo.map(i => board[i]);
+      if (values.filter(v => v === AI).length * 2 && values.includes(null)) {
+        return pattern.combo[values.indexOf(null)];
+      }
+    }
+
+    for (const pattern of winPatterns) {
+      const values = pattern.combo.map(i => board[i]);
+      if (values.filter(v => v === HUMAN).length * 2 && values.includes(null)) {
+        return pattern.combo[values.indexOf(null)];
+      }
+    }
+
+    if (board[4] === null) return 4;
+
+    return getRandomMove();
+  }
+
   function minimaxMove() {
     let bestScore = -Infinity;
     let move = null;
@@ -209,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function minimax(boardState, depth, isMaximizing) {
-    const winner = checkTerminal();
+    const winner = checkTerminal(boardState);
 
     if (winner !== null) {
       if (winner === AI) return 10 - depth;
@@ -240,12 +260,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function checkTerminal() {
+  function checkTerminal(state) {
     for (const p of winPatterns) {
-      if (p.combo.every(i => board[i] === AI)) return AI;
-      if (p.combo.every(i => board[i] === HUMAN)) return HUMAN;
+      if (p.combo.every(i => state[i] === AI)) return AI;
+      if (p.combo.every(i => state[i] === HUMAN)) return HUMAN;
     }
-    return board.includes(null) ? null : "draw";
+    return state.includes(null) ? null : "draw";    
   }
 
   /* =======================
