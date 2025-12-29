@@ -85,121 +85,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     currentPlayer = player === HUMAN ? AI : HUMAN;
   }
+
   /* =======================
-      DIFFICULTY LOGIC
-  ========================*/
-
+     DIFFICULTY LOGIC
+  ======================= */
   document.querySelectorAll(".difficulty button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".difficulty button")
-      .forEach(b => b.classList.remove("active"));
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".difficulty button")
+        .forEach(b => b.classList.remove("active"));
 
-    btn.classList.add("active");
-    botLevel = btn.dataset.level;
+      btn.classList.add("active");
+      botLevel = btn.dataset.level;
 
-    resetGame();
+      resetGame();
     });
   });
-
 
   /* =======================
      AI LOGIC
   ======================= */
   function aiMove() {
-  if (gameOver) return;
+    if (gameOver) return;
 
-  const move = getAIMove();
-  if (move !== null) makeMove(move, AI);
+    const move = getAIMove();
+    if (move !== null) makeMove(move, AI);
   }
 
   function findBestMove() {
     // Try to win
     for (let i = 0; i < 9; i++) {
-    if (!board[i]) {
-      board[i] = AI;
-      if (checkWin(AI)) {
-        board[i] = null;
-        return i;
-      }
-      board[i] = null;
-    }
-  }
-
-  function getAIMove() {
-    if (botLevel === "easy") {
-      const empty = board
-        .map((v, i) => (v === null ? i : null))
-        .filter(v => v !== null);
-      return empty[Math.floor(Math.random() * empty.length)];
-    }
-
-    if (botLevel === "medium") {
-      return findBestMove();
-    }
-
-    if (botLevel === "hard") {
-      return minimaxMove();
-    } 
-  }
-
-  function minimaxMove() {
-    let bestScore = -Infinity;
-    let move = null;
-
-    for (let i = 0; i < 9;i++) {
-      if (board[i] === null) {
+      if (!board[i]) {
         board[i] = AI;
-        let score = minimax(board, 0, false);
-        board[i] = null;
-
-        if (score > bestScore) {
-          bestScore = score;
-          move = i;
+        if (checkWin(AI)) {
+          board[i] = null;
+          return i;
         }
+        board[i] = null;
       }
     }
-    return move;
-  }
-
-  function minimax(boardState, depth, isMaximizing) {
-    const winner = checkTerminal();
-
-  if (winner !== null) {
-    if (winner === AI) return 10 - depth;
-    if (winner === HUMAN) return depth - 10;
-    return 0;
-  }
-
-  if (isMaximizing) {
-    let best = -Infinity;
-    for (let i = 0; i < 9; i++) {
-      if (boardState[i] === null) {
-        boardState[i] = AI;
-        best = Math.max(best, minimax(boardState, depth + 1, false));
-        boardState[i] = null;
-      }
-    }
-    return best;
-  } else {
-    let best = Infinity;
-    for (let i = 0; i < 9; i++) {
-      if (boardState[i] === null) {
-        boardState[i] = HUMAN;
-        best = Math.min(best, minimax(boardState, depth + 1, true));
-        boardState[i] = null;
-      }
-    }
-    return best;
-  }
-  }
-
-  function checkTerminal() {
-    for (const p of winPatterns) {
-    if (p.combo.every(i => board[i] === AI)) return AI;
-    if (p.combo.every(i => board[i] === HUMAN)) return HUMAN;
-  }
-  return board.includes(null) ? null : "draw";
-  }
 
     // Block human
     for (let i = 0; i < 9; i++) {
@@ -221,6 +144,82 @@ document.addEventListener("DOMContentLoaded", () => {
     return empty.length
       ? empty[Math.floor(Math.random() * empty.length)]
       : null;
+  }
+
+  function getAIMove() {
+    if (botLevel === "easy") {
+      const empty = board
+        .map((v, i) => (v === null ? i : null))
+        .filter(v => v !== null);
+      return empty[Math.floor(Math.random() * empty.length)];
+    }
+
+    if (botLevel === "medium") {
+      return findBestMove();
+    }
+
+    if (botLevel === "hard") {
+      return minimaxMove();
+    }
+  }
+
+  function minimaxMove() {
+    let bestScore = -Infinity;
+    let move = null;
+
+    for (let i = 0; i < 9; i++) {
+      if (board[i] === null) {
+        board[i] = AI;
+        let score = minimax(board, 0, false);
+        board[i] = null;
+
+        if (score > bestScore) {
+          bestScore = score;
+          move = i;
+        }
+      }
+    }
+    return move;
+  }
+
+  function minimax(boardState, depth, isMaximizing) {
+    const winner = checkTerminal();
+
+    if (winner !== null) {
+      if (winner === AI) return 10 - depth;
+      if (winner === HUMAN) return depth - 10;
+      return 0;
+    }
+
+    if (isMaximizing) {
+      let best = -Infinity;
+      for (let i = 0; i < 9; i++) {
+        if (boardState[i] === null) {
+          boardState[i] = AI;
+          best = Math.max(best, minimax(boardState, depth + 1, false));
+          boardState[i] = null;
+        }
+      }
+      return best;
+    } else {
+      let best = Infinity;
+      for (let i = 0; i < 9; i++) {
+        if (boardState[i] === null) {
+          boardState[i] = HUMAN;
+          best = Math.min(best, minimax(boardState, depth + 1, true));
+          boardState[i] = null;
+        }
+      }
+      return best;
+    }
+  }
+
+  function checkTerminal() {
+    for (const p of winPatterns) {
+      if (p.combo.every(i => board[i] === AI)) return AI;
+      if (p.combo.every(i => board[i] === HUMAN)) return HUMAN;
+    }
+    return board.includes(null) ? null : "draw";
   }
 
   /* =======================
@@ -257,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const c = document.createElement("div");
       c.className = "confetti";
       c.style.left = Math.random() * window.innerWidth + "px";
-      c.style.background = Math.random() > 0.5 ? "#22d3ee" : "#ec4889"
+      c.style.background = Math.random() > 0.5 ? "#22d3ee" : "#ec4889";
       document.body.appendChild(c);
 
       setTimeout(() => c.remove(), 2500);
@@ -267,7 +266,6 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =======================
      WIN LINE (FIXED)
   ======================= */
-  
   function drawWinLine(pattern, player) {
     const boardRect = boardEl.getBoundingClientRect();
 
@@ -288,7 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
     winLine.style.left = `${x1}px`;
     winLine.style.top = `${y1}px`;
     winLine.style.transformOrigin = "left center";
-    winLine.style.background = player === "X" ? "#22d3ee" : "#ec4889"
+    winLine.style.background = player === "X" ? "#22d3ee" : "#ec4889";
     winLine.style.color = winLine.style.background;
     winLine.style.transform = `rotate(${angle}deg)`;
     winLine.classList.add("pulse");
@@ -297,7 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
       winLine.style.width = `${length}px`;
     });
   }
-
 
   /* =======================
      RESET
