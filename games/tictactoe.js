@@ -111,7 +111,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (move !== null) makeMove (move, AI);
   }
 
-  function getRandomMove() {
+  /* RANDOM MOVE */
+  function getRandomMove() { 
   const emptyCells = board
     .map((v, i) => (v === null ? i : null))
     .filter(i => i !== null);
