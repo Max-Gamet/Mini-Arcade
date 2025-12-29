@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentPlayer = HUMAN;
   let board = Array(9).fill(null);
   let gameOver = false;
+  let botLevel = "medium";
 
   /* =======================
      AUDIO (SAFE LOAD)
@@ -107,6 +108,23 @@ document.addEventListener("DOMContentLoaded", () => {
         board[i] = null;
       }
     }
+
+  function getAIMove() {
+    if (botLevel === "easy") {
+    const empty = board
+      .map((v, i) => (v === null ? i : null))
+      .filter(v => v !== null);
+    return empty[Math.floor(Math.random() * empty.length)];
+    }
+
+    if (botLevel === "medium") {
+    return findBestMove();
+    }
+
+    if (botLevel === "hard") {
+    return minimaxMove();
+    }
+}
 
     // Block human
     for (let i = 0; i < 9; i++) {
