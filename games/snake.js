@@ -24,6 +24,8 @@ let portalSides = {
     left: false,
     right: false
 };
+let highScore = Number(localStorage.getItem("snakeHighScore")) || 0;
+let lastScore = Number(localStorage.getItem("snakeLastScore")) || 0;
 
 /* SPEED CONTROL */
 let speed = 150;
@@ -41,6 +43,8 @@ function initGame() {
   score = 0;
   speed = 150;
   isRunning = false;
+
+  updateScoreUI();
 
   randomizePortals();
 
@@ -155,6 +159,9 @@ resetbtn.addEventListener("click", () => {
    SNAKE LOGIC
 ======================= */
 function moveSnake() {
+  // If direction is zero, do nothing
+  if (direction.x === 0 && direction.y === 0) return;
+
   const head = {
     x: snake[0].x + direction.x,
     y: snake[0].y + direction.y
@@ -162,20 +169,30 @@ function moveSnake() {
 
   snake.unshift(head);
 
+  // FOOD EATEN
   if (head.x === food.x && head.y === food.y) {
     score++;
-    scoreEl.textContent = `Score: ${score}`;
+
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem("snakeHighScore", highScore);
+    }
+
+    updateScoreUI();
     food = spawnFood();
 
-    // SPEED UP
+    // Speed up
     speed = Math.max(minSpeed, speed - speedStep);
     startGameLoop();
+
   } else {
-    snake.pop();
+    // 🔑 THIS LINE WAS MISSING
+    snake.pop(); // remove tail if no food eaten
   }
 
   lastDirection = direction;
 }
+
 
 function checkCollision() {
   const head = snake[0];
@@ -193,6 +210,12 @@ function checkCollision() {
   }
 }
 
+function updateScoreUI() {
+  document.getElementById("currentScore").textContent = score;
+  document.getElementById("highScore").textContent = highScore;
+  document.getElementById("lastScore").textContent = lastScore;
+}
+
 /* =======================
    GAME OVER
 ======================= */
@@ -205,6 +228,16 @@ function endGame() {
 
   finalScore.textContent = score;
   death.style.display = "flex";
+
+  lastScore = score;
+  localStorage.setItem("snakeLastScore", lastScore);
+
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("snakeHighScore", highScore);
+  }
+
+  updateScoreUI();
 
   setTimeout(() => {
     death.style.display = "none";

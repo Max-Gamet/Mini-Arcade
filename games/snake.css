@@ -123,3 +123,27 @@ button {
         max-height: 88vw;
     }
 }
+
+.scorecard {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 12px auto;
+    padding: 10px 14px;
+    max-width: 340px;
+    border: 2px solid #22d3ee;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #22d3ee;
+    font-family: monospace;
+    color: #e0faff;
+}
+
+.scorecard div {
+    font-size: 14px;
+    white-space: nowwrap;
+}
+
+.scorecard span {
+    color: #22ff88;
+    font-weight: bold;
+}
