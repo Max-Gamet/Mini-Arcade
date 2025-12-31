@@ -47,6 +47,26 @@ function initGame() {
   draw();
 }
 
+document.addEventListener("touchmove", e => {
+  e.preventDefault();
+}, {passive: false});
+
+document.querySelectorAll("#mobileControls button").forEach(btn => {
+  btn.addEventListener("touchstart", e => {
+    e.preventDefault();
+    handleDirection(btn.dataset.dir);
+  });
+});
+
+function handleDirection(dir) {
+  if (!isRunning) return;
+
+  if (dir === "up" && lastDirection.y !== 1) direction = { x: 0, y: -1};
+  if (dir === "down" && lastDirection.y !== -1) direction = { x: 0, y: 1};
+  if (dir === "left" && lastDirection.x !== 1) direction = { x: -1, y: 0};
+  if (dir === "right" && lastDirection.x !== -1) direction = { x: 1, y: 0};
+}
+
 /* =======================
    GAME LOOP
 ======================= */
