@@ -103,7 +103,7 @@ button {
 }
 
 .mobile-controls button.down {
-    margin-top: -8px;
+    margin-top: -16px;
 }
 
 .mobile-controls button:active {
