@@ -160,31 +160,12 @@ function moveSnake() {
 function checkCollision() {
   const head = snake[0];
 
-  // LEFT WALL
-  if (head.x < 0) {
-    if (portalSides.left) head.x = TILES - 1;
-    else endGame();
-  }
+  if (head.x < 0) head.x = TILES - 1;
+  if (head.x >= TILES) head.x = 0;
 
-  // RIGHT WALL
-  if (head.x >= TILES) {
-    if (portalSides.right) head.x = 0;
-    else endGame();
-  }
+  if (head.y < 0) head.y = TILES - 1;
+  if (head.y >= TILES) head.y = 0;
 
-  // TOP WALL
-  if (head.y < 0) {
-    if (portalSides.top) head.y = TILES - 1;
-    else endGame();
-  }
-
-  // BOTTOM WALL
-  if (head.y >= TILES) {
-    if (portalSides.bottom) head.y = 0;
-    else endGame();
-  }
-
-  // SELF COLLISION
   for (let i = 1; i < snake.length; i++) {
     if (head.x === snake[i].x && head.y === snake[i].y) {
       endGame();
@@ -217,58 +198,50 @@ function endGame() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    ctx.strokeStyle = "rgba(255,255,255,0.08)";
+    ctx.lineWidth = 1;
+
+    for (let i = 0; i <= TILES; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * GRID, 0);
+      ctx.lineTo(i * GRID, canvas.height);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(0, i * GRID);
+      ctx.lineTo(canvas.width, i * GRID);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "lime";
     snake.forEach((part, index) => {
-        ctx.fillStyle = "#22ff22";
+      ctx.fillRect(
+        part.x * GRID,
+        part.y * GRID,
+        GRID,
+        GRID
+      );
 
-        ctx.fillRect(
-            part.x * GRID,
-            part.y * GRID,
-            GRID,
-            GRID
-        );
-
-        if (index === 0) {
-            ctx.fillStyle = "black";
-
-            const eyeSize = 3;
-            const eyeOffsetX = direction.x !== 0 ? 12 : 6;
-            const eyeOffsetY = direction.y !== 0 ? 12 : 6;
-
-            ctx.fillRect(
-                part.x * GRID + eyeOffsetX,
-                part.y * GRID + eyeOffsetY,
-                eyeSize,
-                eyeSize
-            );
-
-            ctx.fillRect(
-                part.x * GRID + GRID - eyeOffsetX - eyeSize,
-                part.y * GRID + eyeOffsetY,
-                eyeSize,
-                eyeSize
-            );
-        }
+      if (index === 0) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(part.x * GRID + 6, part.y * GRID + 6, 2, 0, Math.PI * 2);
+        ctx.arc(part.x * GRID + GRID - 6, part.y * GRID + 6, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "lime";
+      }
     });
 
-    const fx = food.x * GRID + GRID / 2;
-    const fy = food.y * GRID + GRID / 2;
-
-    ctx.fillStyle = "#ff2d2d";
+    ctx.fillStyle = "red";
     ctx.beginPath();
-    ctx.arc(fx, fy, GRID / 2.4, 0, Math.PI * 2);
+    ctx.arc(
+      food.x * GRID + GRID / 2,
+      food.y * GRID + GRID / 2,
+      GRID / 2.4,
+      0,
+      Math.PI * 2
+    );
     ctx.fill();
-
-    ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.beginPath();
-    ctx.arc(fx - 3, fy - 3, 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.strokeStyle = "#3b2f2f";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(fx, fy - GRID / 2.5);
-    ctx.lineTo(fx, fy - GRID / 1.7);
-    ctx.stroke();
 }
 
 /* =======================
