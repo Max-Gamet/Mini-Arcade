@@ -14,7 +14,8 @@ let loadingInterval = null;
 let playerScore = Number(localStorage.getItem("rpsPlayerWins")) || 0;
 let aiScore = Number(localStorage.getItem("rpsAIWins")) || 0;
 
-let maxWins = 3;
+let gameMode = localStorage.getItem("rpsGameMode") || "free";
+let maxWins = gameMode === "3" ? 2 : gameMode === "5" ? 3 : Infinity;
 let gameOver = false;
 
 playerScoreEl.textContent = playerScore;
@@ -43,12 +44,17 @@ buttons.forEach(btn => {
 
 document.querySelectorAll("#gameModes button").forEach(btn => {
     btn.addEventListener("click", () => {
-        const mode = Number(btn.dataset.mode);
-        maxWins = Math.ceil(mode / 2);
+        gameMode = btn.dataset.mode;
+        localStorage.setItem("rpsGameMode", gameMode);
+
+        maxWins = 
+            gameMode === "3" ? 2 :
+            gameMode === "5" ? 3 :
+            Infinity;
 
         resetMatch();
-    });
-});
+    })
+})
 
 function resetMatch() {
     playerScore = 0;
@@ -61,7 +67,10 @@ function resetMatch() {
     playerScoreEl.textContent = 0;
     aiScoreEl.textContent = 0;
     aiChoiceEl.textContent = "Ai choice: ?";
-    resultEl.textContent = "";
+    resultEl.textContent = 
+        gameMode === "free"
+            ? "Free Play Mode"
+            : `Best of ${gameMode}`;
 }
 
 function launchConfetti() {
@@ -121,14 +130,16 @@ function playRound(player, ai) {
         resultEl.textContent = `You lose! ${ai} beats ${player}`;
     }
 
-    if (playerScore === maxWins || aiScore === maxWins) {
-        gameOver = true;
-        launchConfetti();
+    if (playerScore >= maxWins || aiScore >= maxWins) {
+        if (gameMode !== "free") {
+            gameOver = true;
+            launchConfetti();
 
-        resultEl.textContent =
-        playerScore === maxWins
-            ? "🔥 YOU WON THE MATCH!"
-            : "💀 AI WON THE MATCH!";
+            resultEl.textContent =
+                playerScore >= maxWins
+                    ? "🔥 YOU WON THE MATCH!"
+                    : "💀 AI WON THE MATCH!";
+        }
     }
 }
 
