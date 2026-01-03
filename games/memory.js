@@ -95,18 +95,6 @@ function handleWin() {
 
     updateScoreUI();
 
-    if (isNewHighScore) {
-        highScorePopup.classList.remove("hidden");
-        highScorePopup.classList.add("show");
-
-        launchConfetti();
-
-        setTimeout(() => {
-            highScorePopup.classList.remove("show");
-            highScorePopup.classList.add("hidden");
-        }, 2000);
-    }
-
     board.classList.add("win-glow");
 
     setTimeout(() => {
@@ -119,6 +107,18 @@ function handleWin() {
     setTimeout(() => {
         popup.classList.remove("show")
     }, 1500);
+
+    if (isNewHighScore) {
+        highScorePopup.classList.remove("hidden");
+        highScorePopup.classList.add("show");
+
+        launchConfetti();
+
+        setTimeout(() => {
+            highScorePopup.classList.remove("show");
+            highScorePopup.classList.add("hidden");
+        }, 1500);
+    }
 }
 
 function resetTurn() {
