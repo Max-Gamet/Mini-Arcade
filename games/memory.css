@@ -165,5 +165,21 @@ buttton:hover {
 }
 
 .hidden {
-    display: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.confetti {
+    position: fixed;
+    top: -10px;
+    width: 8px;
+    height: 8px;
+    animation: fall 2.5s linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translate(100vh) rotate(360deg);
+        opacity: 0;
+    }
 }

@@ -116,8 +116,11 @@ function handleWin() {
 
         setTimeout(() => {
             highScorePopup.classList.remove("show");
-            highScorePopup.classList.add("hidden");
-        }, 1500);
+            
+            setTimeout(() => {
+                highScorePopup.classList.add("hidden");
+            }, 400);
+        }, 2000);
     }
 }
 
@@ -145,8 +148,24 @@ restartBtn.addEventListener("click", () => {
 
     document.getElementById("currentMoves").textContent = 0;
 
+    const highScorePopup = document.getElementById("highScorePopup");
+    highScorePopup.classList.remove("show");
+    highScorePopup.classList.add("hidden");
+
     createBoard();
 });
+
+function launchConfetti() {
+    for (let i = 0; i < 40; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random() * window.innerWidth + "px";
+        c.style.background = Math.random() > 0.5 ? "#facc15" : "#22d3ee";
+        document.body.appendChild(c);
+
+        setTimeout(() => c.remove(), 2500);
+    }
+}
 
 createBoard();
 updateScoreUI();
